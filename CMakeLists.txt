@@ -278,7 +278,11 @@ IF (${ICONV_SUPPORT} MATCHES "ON")
                                                          /usr/local/lib
                          DOC "Path where the openssl libraries can be found")
             IF (ICONV_LIBRARY)
-                SET(PROJECT_LIBS "${PROJECT_LIBS} iconv")
+                FIND_LIBRARY(INTL_LIBRARY NAMES intl PATHS /lib
+                                                           /opt/lib
+                                                           /usr/lib
+                                                           /usr/local/lib)
+                SET(PROJECT_LIBS "${PROJECT_LIBS} iconv intl")
             ELSE (ICONV_LIBRARY)
                 MESSAGE(STATUS "#### ERROR: Cannot find libiconv.so, aborting")
             ENDIF (ICONV_LIBRARY)
@@ -450,7 +454,7 @@ IF(DEBUG_MODE MATCHES "ON")
     SET_TARGET_PROPERTIES(ctpp2 PROPERTIES LINK_FLAGS -Wl,-lgcov)
 ENDIF(DEBUG_MODE MATCHES "ON")
 
-TARGET_LINK_LIBRARIES(ctpp2 ${MD5_LIBRARY} ${ICONV_LIBRARY} ${WS2_32_LIBRARY})
+TARGET_LINK_LIBRARIES(ctpp2 ${MD5_LIBRARY} ${ICONV_LIBRARY} ${INTL_LIBRARY} ${WS2_32_LIBRARY})
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     SET_TARGET_PROPERTIES(ctpp2 PROPERTIES COMPILE_DEFINITIONS CTPP2_DLL)
